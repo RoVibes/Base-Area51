@@ -16,7 +16,7 @@ namespace Area51Elevator
         List<Agent> Agents = new List<Agent>();
         Random random = new Random();
         int agentcount = 0;
-        public void getAgents(List<Agent> agents)
+        public void getAgents(List<Agent> agents)       //Gets the list of agents and assigns them a random security level.
         {
             foreach (Agent a in agents)
             {
@@ -25,7 +25,7 @@ namespace Area51Elevator
             }
         }
         
-        public void handleThread()
+        public void handleThread()  //Starts the threads for the Agents.
         {
             foreach (Agent a in Agents)
             {
@@ -38,7 +38,7 @@ namespace Area51Elevator
         }
         public void getRandomAction(Agent agentThread)
         {
-            arriveAtBase(agentThread);
+            arriveAtBase(agentThread); //Agents arrive at the base.
             while (true)
             {
                 int randomAction = random.Next(1,3);
@@ -65,68 +65,68 @@ namespace Area51Elevator
         {
             string threadID = Thread.CurrentThread.Name;
             Console.WriteLine(threadID + " " + Actions.Arrive + "d at the base");
-            agentThread.leftAtFloor = 1;
+            agentThread.leftAtFloor = 1;        //Setting the property of the current agent to 1 when he arrives.
             
         }
 
-        public void callElevator(Agent agentThread)
+        public void callElevator(Agent agentThread)     
         {
             string threadID = Thread.CurrentThread.Name;
             Console.WriteLine(threadID + " " + Actions.Call + "ed the elevator at floor: "+ Enum.GetName(typeof(FloorsEnum), agentThread.leftAtFloor - 1) +" Agent security level: " + Enum.GetName(typeof(SecurityLevels), agentThread.securityLevel - 1));
             Console.WriteLine(threadID + " waiting for the elevator..." );
-            if (elevator.currentfloor == agentThread.leftAtFloor)
+            if (elevator.currentfloor == agentThread.leftAtFloor)   //Checking if the currentfloor of the Elevator is equal to the floor that the agent last left.
             {
-                elevator.enterElevator(agentThread);
+                elevator.enterElevator(agentThread);        //if its true the agent enters the elevator.
             }
-            else if (elevator.currentfloor > agentThread.leftAtFloor)
+            else if (elevator.currentfloor > agentThread.leftAtFloor)   //if the currentfloor is higher than the floor that the agent last left
             {
-                descendElevator(agentThread);
+                descendElevatorEmptyElevator(agentThread); //Call the elevator to come to the floor at which the agent is now so he could get in.
             }
-            else if (elevator.currentfloor < agentThread.leftAtFloor)
+            else if (elevator.currentfloor < agentThread.leftAtFloor) //if the currentfloor is lower than the floor that the agent last left
             {
-                ascendElevator(agentThread);
+                ascendElevatorEmptyElevator(agentThread); //Call the elevator to come to the floor at which the agent is now so he could get in.
             }
 
         }
         public void leaveBase(Agent agentThread)
         {
             mutexElevator.WaitOne();
-            elevator.isAgentGoingHome = true;
+            elevator.isAgentGoingHome = true;       //Set the bool to true because the agent desided to leave(I check this bool at the class Elevator in the method EnterElevator.)
             string threadID = Thread.CurrentThread.Name;
             Console.WriteLine(threadID + " decided to leave");
-            if (agentThread.leftAtFloor != 1)
+            if (agentThread.leftAtFloor != 1)       //If the agent that decided to leave is at a floor different than floor 1(G Floor) I call the callElevator Method so he can get into the elevator, descend to floor G so he can leave the base.
             {
                 
                 callElevator(agentThread);
                 elevator.isAgentGoingHome = false;
             }
-            elevator.isAgentGoingHome = false;
+            elevator.isAgentGoingHome = false;      //If the agent currently is at a floor 1(G Floor) he leaves.
             Console.WriteLine(threadID + " left");
             mutexElevator.ReleaseMutex();
 
         }
 
-        public void descendElevator(Agent agentThread)
+        public void descendElevatorEmptyElevator(Agent agentThread) //Descending the elevator to the floor that the current agent is at so he can get in.
         {
             for (int i = elevator.currentfloor; i >= 1; i--)
             {
                 Thread.Sleep(1000);
                 Console.WriteLine("Elevator is descending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
-                if (i == agentThread.leftAtFloor)
+                if (i == agentThread.leftAtFloor)       //When the elevator arrives at the floor that the current agent is I call EnterElevator method and the Agent gets in the elevator.
                 {
                     elevator.currentfloor = i;
-                    elevator.enterElevator(agentThread);
+                    elevator.enterElevator(agentThread);  
                     break;
                 }
             }
         }
-        public void ascendElevator(Agent agentThread)
+        public void ascendElevatorEmptyElevator(Agent agentThread) //Ascending the elevator to the floor that the current agent is at so he can get in.
         {
             for (int i = elevator.currentfloor; i <= 4; i++)
             {
                 Thread.Sleep(1000);
                 Console.WriteLine("Elevator is ascending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
-                if (i == agentThread.leftAtFloor)
+                if (i == agentThread.leftAtFloor) //When the elevator arrives at the floor that the current agent is I call EnterElevator method and the Agent gets in the elevator.
                 {
                     elevator.currentfloor = i;
                     elevator.enterElevator(agentThread);

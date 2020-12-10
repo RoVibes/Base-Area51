@@ -10,11 +10,11 @@ namespace Area51Elevator
     
     class Floors
     {
-        public void FloorG(Agent agentThread)
+        public void FloorG(Agent agentThread)   
         {
             string threadID = Thread.CurrentThread.Name;
             Console.WriteLine(threadID + " entered floor G");
-            agentThread.leftAtFloor = 1;
+            agentThread.leftAtFloor = 1;    //When the agent get into the floor I set the property leftAtFloor for the current agent according to the floor.
         }
         public void FloorS(Agent agentThread)
         {
