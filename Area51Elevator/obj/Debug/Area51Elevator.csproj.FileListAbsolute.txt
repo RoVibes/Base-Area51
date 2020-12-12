@@ -4,3 +4,9 @@ C:\Users\Robi\Desktop\C# TPL Project\Area51Elevator\Area51Elevator\bin\Debug\Are
 C:\Users\Robi\Desktop\C# TPL Project\Area51Elevator\Area51Elevator\obj\Debug\Area51Elevator.csprojAssemblyReference.cache
 C:\Users\Robi\Desktop\C# TPL Project\Area51Elevator\Area51Elevator\obj\Debug\Area51Elevator.exe
 C:\Users\Robi\Desktop\C# TPL Project\Area51Elevator\Area51Elevator\obj\Debug\Area51Elevator.pdb
+C:\Users\Robi\Source\Repos\RoVibes\Base-Area51\Area51Elevator\bin\Debug\Area51Elevator.exe.config
+C:\Users\Robi\Source\Repos\RoVibes\Base-Area51\Area51Elevator\bin\Debug\Area51Elevator.exe
+C:\Users\Robi\Source\Repos\RoVibes\Base-Area51\Area51Elevator\bin\Debug\Area51Elevator.pdb
+C:\Users\Robi\Source\Repos\RoVibes\Base-Area51\Area51Elevator\obj\Debug\Area51Elevator.csprojAssemblyReference.cache
+C:\Users\Robi\Source\Repos\RoVibes\Base-Area51\Area51Elevator\obj\Debug\Area51Elevator.exe
+C:\Users\Robi\Source\Repos\RoVibes\Base-Area51\Area51Elevator\obj\Debug\Area51Elevator.pdb

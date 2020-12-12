@@ -22,6 +22,7 @@ namespace Area51Elevator
         int selectedFloor = 0;
         int topFloor = 4;
         int floorSecurityLevel = 0;
+        bool isElevatorEmpty = true;
         Random random = new Random();
         Floors floor = new Floors();
 
@@ -38,7 +39,8 @@ namespace Area51Elevator
             {
                 selectFloor();  //If the agent doesn't want to leave he selects a floor.
             }
-            controlElevator(agentThread); //After that I call Control elevator which handles if the floor will descend or ascend.
+            isElevatorEmpty = false;
+            controlElevator(agentThread); //After that I call Control elevator which handles if the elevator will descend or ascend.
             
         }
         public int selectFloor()
@@ -75,33 +77,69 @@ namespace Area51Elevator
             }
             
         }
-        public void descendElevator(Agent agentThread)  //Descending the elevator with the agent inside the elevator.
+        public void descendElevator(Agent agentThread)  
         {
-            for (int i = currentfloor; i >= 1; i--)
+            if (isElevatorEmpty)        //Check if the elevator has an Agent in it. If it doesn't descend the elevator to the floor that the agent currently is so the agent can get in.
             {
-                Thread.Sleep(1000);
-                Console.WriteLine("Elevator is descending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
-                if (i == selectedFloor) //When the elevator reaches the selected floor I call leaveElevator so the agent could go in the floor.
+                for (int i = currentfloor; i >= 1; i--)
                 {
-                    currentfloor = i;
-                    leaveElevator(agentThread);
-                    break;
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Elevator is descending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
+                    if (i == agentThread.leftAtFloor)       //When the elevator arrives at the floor that the current agent is I call EnterElevator method and the Agent gets in the elevator.
+                    {
+                        currentfloor = i;
+                        enterElevator(agentThread);     
+                        break;
+                    }
                 }
             }
+            else                       //If theres an agent in the elevator descend the elevator to the floor that the agent selected..
+            {
+                for (int i = currentfloor; i >= 1; i--)
+                {
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Elevator is descending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
+                    if (i == selectedFloor) //When the elevator reaches the selected floor I call leaveElevator so the agent could go in the floor.
+                    {
+                        currentfloor = i;
+                        leaveElevator(agentThread);
+                        break;
+                    }
+                }
+            }
+            
         }
-        public void ascendElevator(Agent agentThread) //Ascending the elevator with the agent inside the elevator.
+        public void ascendElevator(Agent agentThread) 
         {
-            for (int i = currentfloor; i <= topFloor; i++)
+            if (isElevatorEmpty)    //Check if the elevator has an Agent in it. If it doesn't descend the elevator so the agent can get in.
             {
-                Thread.Sleep(1000);
-                Console.WriteLine("Elevator is ascending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
-                if (i == selectedFloor) //When the elevator reaches the selected floor I call leaveElevator so the agent could go in the floor.
+                for (int i = currentfloor; i <= 4; i++)
                 {
-                    currentfloor = i;
-                    leaveElevator(agentThread);
-                    break;
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Elevator is ascending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
+                    if (i == agentThread.leftAtFloor) //When the elevator arrives at the floor that the current agent is I call EnterElevator method and the Agent gets in the elevator.
+                    {
+                        currentfloor = i;
+                        enterElevator(agentThread);
+                        break;
+                    }
                 }
             }
+            else                //If theres an agent in the elevator ascend the elevator to the selected floor.
+            {
+                for (int i = currentfloor; i <= topFloor; i++)
+                {
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Elevator is ascending... Floor: " + Enum.GetName(typeof(FloorsEnum), i - 1));
+                    if (i == selectedFloor) //When the elevator reaches the selected floor I call leaveElevator so the agent could go in the floor.
+                    {
+                        currentfloor = i;
+                        leaveElevator(agentThread);
+                        break;
+                    }
+                }
+            }
+            
         }
         public void leaveElevator(Agent agentThread)
         {
@@ -109,6 +147,7 @@ namespace Area51Elevator
             if (agentThread.securityLevel >= floorSecurityLevel)         //I check if the security level of the agent is higher than the security level of the floor.
             {
                 accessFloor(agentThread);   //If its higher I call access floor so the agent can get into the selected floor.
+                isElevatorEmpty = true;
             }
             else    //If the security level of the agent is lower then the security level of the floor, he doesn't have permissions to access the floor he selected.
             {   
